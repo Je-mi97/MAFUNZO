@@ -1,56 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
+
+    <!-- ============================== -->
+    <!-- APPLICATION                    -->
+    <!-- ============================== -->
+
     <string name="app_name">MAFUNZO</string>
+
+
+    <!-- ============================== -->
+    <!-- ÉCRAN PRINCIPAL                -->
+    <!-- ============================== -->
+
     <string name="welcome_question">Êtes-vous nouveau sur l\'application ?</string>
+
     <string name="btn_yes">OUI</string>
+
     <string name="btn_no">NON</string>
+
     <string name="lang_en">EN</string>
+
     <string name="lang_fr">FR</string>
+
     <string name="lang_separator">|</string>
+
     <string name="logo_letter">L</string>
 
-    <!-- Login Screen -->
+
+    <!-- ============================== -->
+    <!-- LOGIN                          -->
+    <!-- ============================== -->
+
     <string name="title_login">CONNEXION</string>
+
     <string name="hint_username_email">Nom d\'utilisateur / E-mail</string>
+
     <string name="hint_password">Mot de passe</string>
+
     <string name="btn_forgot_password">Mot de passe oublié ?</string>
+
     <string name="btn_login">SE CONNECTER</string>
 
-    <!-- WAU Screen (Inscription Etape 1) -->
+
+    <!-- ============================== -->
+    <!-- WAU : INSCRIPTION ÉTAPE 1      -->
+    <!-- ============================== -->
+
     <string name="title_wau">Profil personnel</string>
+
     <string name="desc_wau">Commençons par faire connaissance. Ces informations nous permettront de créer votre espace sécurisé.</string>
+
     <string name="hint_first_name">Prénom</string>
+
     <string name="hint_last_name">Nom</string>
+
     <string name="hint_email">E-mail</string>
+
     <string name="btn_next">SUIVANT</string>
 
-    <!-- TUMAU Screen (Inscription Etape 2 - Personnalisation) -->
+
+    <!-- ============================== -->
+    <!-- TUMAU : INSCRIPTION ÉTAPE 2    -->
+    <!-- ============================== -->
+
     <string name="title_tumau">Préférences</string>
+
     <string name="desc_tumau">Aidez-nous à personnaliser votre parcours de formation pour qu\'il corresponde à vos besoins.</string>
+
     <string name="welcome_personalize">Bienvenue chez MAFUNZO ! Personnalisez votre expérience.</string>
-    
+
+
+    <!-- Objectifs -->
+
     <string name="question_objectives">Quels sont vos objectifs ?</string>
+
     <string name="objective_job">Trouver un premier emploi</string>
+
     <string name="objective_career">Développer ma carrière</string>
+
     <string name="objective_pleasure">Apprendre pour le plaisir</string>
-    
+
+
+    <!-- Intérêts -->
+
     <string name="question_interests">Domaines d\'intérêt :</string>
+
     <string name="interest_tech">Technologie &amp; Dev</string>
+
     <string name="interest_design">Design &amp; UI/UX</string>
+
     <string name="interest_business">Business &amp; Marketing</string>
+
     <string name="interest_soft_skills">Soft Skills</string>
-    
+
+
+    <!-- Niveau -->
+
     <string name="question_level">Votre niveau actuel :</string>
+
     <string name="level_beginner">Débutant</string>
+
     <string name="level_intermediate">Intermédiaire</string>
+
     <string name="level_expert">Avancé</string>
 
+
+    <!-- Rythme -->
+
     <string name="question_pace">Rythme d\'apprentissage :</string>
+
     <string name="pace_intensive">Intensif (10h+/semaine)</string>
+
     <string name="pace_moderate">Modéré (3-5h/semaine)</string>
+
     <string name="pace_casual">Occasionnel</string>
 
+
+    <!-- Employeur -->
+
     <string name="question_employer">Je suis employeur, je souhaite :</string>
+
     <string name="employer_recruit">Recruter des talents</string>
-    
+
+
+    <!-- Confirmation -->
+
     <string name="btn_confirm">FINALISER L\'INSCRIPTION</string>
+
+
+    <!-- ============================== -->
+    <!-- NAVIGATION PRINCIPALE           -->
+    <!-- ============================== -->
+
+    <string name="nav_home">Accueil</string>
+
+    <string name="nav_courses">Cours</string>
+
+    <string name="nav_profile">Profil</string>
+
+
+    <!-- ============================== -->
+    <!-- COURS                           -->
+    <!-- ============================== -->
+
+    <string name="course_title">Mes cours</string>
+
+    <string name="course_search_hint">Rechercher un cours</string>
+
+
+    <!-- ============================== -->
+    <!-- PROFIL                          -->
+    <!-- ============================== -->
+
+    <string name="profile_title">Profil</string>
+
+    <string name="profile_progress">Ma progression</string>
+
+    <string name="profile_history">Historique</string>
+
+    <string name="profile_notifications">Notifications</string>
+
+    <string name="profile_contact">Nous contacter</string>
+
+    <string name="profile_payments">Mes paiements</string>
+
+    <string name="profile_payments_dev">En cours de développement</string>
+
+    <string name="profile_settings">Paramètres</string>
+
+    <string name="profile_logout">Déconnexion</string>
+
 </resources>

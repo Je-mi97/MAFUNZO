@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!-- Couleurs de base -->
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Identité MAFUNZO -->
+    <color name="green_dark">#1F5C45</color>
+    <color name="green_primary">#2E7D5B</color>
+    <color name="green_medium">#4A9B73</color>
+    <color name="green_light">#DDEFE6</color>
+    <color name="green_surface">#F1F8F4</color>
+
+    <!-- Arrière-plans -->
+    <color name="background">#F7FAF8</color>
+    <color name="surface">#FFFFFF</color>
+
+    <!-- Textes -->
+    <color name="text_primary">#1B2A23</color>
+    <color name="text_secondary">#65736C</color>
+    <color name="text_disabled">#A5B0AA</color>
+    <color name="text_on_green">#FFFFFF</color>
+
+    <!-- États -->
+    <color name="success">#2E7D5B</color>
+    <color name="warning">#D99A2B</color>
+    <color name="error">#C94A4A</color>
+
+    <!-- Séparateurs -->
+    <color name="border">#D7E5DE</color>
+    <color name="divider">#E6EEE9</color>
+
 </resources>
