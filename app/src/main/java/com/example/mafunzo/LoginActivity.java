@@ -1,8 +1,8 @@
 package com.example.mafunzo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -42,9 +42,13 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> {
             if (validateLogin()) {
-                // Logique de connexion ici
+                // Logique de connexion réussie
                 Toast.makeText(this, "Connexion réussie !", Toast.LENGTH_SHORT).show();
-                // Passer à l'écran d'accueil plus tard
+                
+                // Redirection vers le Dashboard (HOME)
+                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finishAffinity(); // On ferme l'écran de login pour ne pas y revenir
             }
         });
 
@@ -53,10 +57,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    // 3. Validation des Formulaires (Login)
     private boolean validateLogin() {
         boolean isValid = true;
-
         String username = etUsername.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 

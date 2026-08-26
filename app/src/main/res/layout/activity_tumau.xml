@@ -37,7 +37,7 @@
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="?android:attr/textColorSecondary" />
 
-            <!-- Question 1: Objectifs (Single Choice) -->
+            <!-- Question 1: Objectifs -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,28 +51,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:singleSelection="true">
+                app:singleSelection="true"
+                app:selectionRequired="true">
 
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.Material3.Chip.Choice"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/objective_job" />
 
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.Material3.Chip.Choice"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/objective_career" />
 
                 <com.google.android.material.chip.Chip
-                    style="@style/Widget.Material3.Chip.Choice"
+                    style="@style/Widget.Material3.Chip.Filter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/objective_pleasure" />
             </com.google.android.material.chip.ChipGroup>
 
-            <!-- Question 2: Intérêts (Multiple Choice) -->
+            <!-- Question 2: Intérêts -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

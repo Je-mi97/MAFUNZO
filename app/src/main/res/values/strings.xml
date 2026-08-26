@@ -15,7 +15,7 @@
     <string name="btn_forgot_password">Mot de passe oublié ?</string>
     <string name="btn_login">SE CONNECTER</string>
 
-    <!-- WAU Screen (Inscription Etape 1) -->
+    <!-- WAU Screen -->
     <string name="title_wau">Profil personnel</string>
     <string name="desc_wau">Commençons par faire connaissance. Ces informations nous permettront de créer votre espace sécurisé.</string>
     <string name="hint_first_name">Prénom</string>
@@ -23,34 +23,42 @@
     <string name="hint_email">E-mail</string>
     <string name="btn_next">SUIVANT</string>
 
-    <!-- TUMAU Screen (Inscription Etape 2 - Personnalisation) -->
+    <!-- TUMAU Screen -->
     <string name="title_tumau">Préférences</string>
     <string name="desc_tumau">Aidez-nous à personnaliser votre parcours de formation pour qu\'il corresponde à vos besoins.</string>
     <string name="welcome_personalize">Bienvenue chez MAFUNZO ! Personnalisez votre expérience.</string>
-    
     <string name="question_objectives">Quels sont vos objectifs ?</string>
     <string name="objective_job">Trouver un premier emploi</string>
     <string name="objective_career">Développer ma carrière</string>
     <string name="objective_pleasure">Apprendre pour le plaisir</string>
-    
     <string name="question_interests">Domaines d\'intérêt :</string>
     <string name="interest_tech">Technologie &amp; Dev</string>
     <string name="interest_design">Design &amp; UI/UX</string>
     <string name="interest_business">Business &amp; Marketing</string>
     <string name="interest_soft_skills">Soft Skills</string>
-    
     <string name="question_level">Votre niveau actuel :</string>
     <string name="level_beginner">Débutant</string>
     <string name="level_intermediate">Intermédiaire</string>
     <string name="level_expert">Avancé</string>
-
     <string name="question_pace">Rythme d\'apprentissage :</string>
     <string name="pace_intensive">Intensif (10h+/semaine)</string>
     <string name="pace_moderate">Modéré (3-5h/semaine)</string>
     <string name="pace_casual">Occasionnel</string>
-
     <string name="question_employer">Je suis employeur, je souhaite :</string>
     <string name="employer_recruit">Recruter des talents</string>
-    
     <string name="btn_confirm">FINALISER L\'INSCRIPTION</string>
+
+    <!-- HOME Screen -->
+    <string name="title_home">HOME</string>
+    <string name="subtitle_home">EN COURS DE DÉVELOPPEMENT</string>
+    <string name="section_subjects">Sujets</string>
+    <string name="section_recommendations">Recommandations</string>
+    <string name="section_careers">Carrières</string>
+    <string name="section_certifications">Certifications</string>
+    <string name="link_see_all">Voir Tout</string>
+    <string name="link_see_more">Voir +</string>
+    
+    <string name="nav_home">Home</string>
+    <string name="nav_courses">Cours</string>
+    <string name="nav_profile">Profil</string>
 </resources>
