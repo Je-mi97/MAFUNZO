@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="24dp"
-    tools:context=".TumauActivity">
+    android:background="@color/background"
+    tools:context=".Activity.TumauActivity">
 
     <ScrollView
         android:id="@+id/scroll_tumau"
@@ -14,7 +16,9 @@
         android:layout_marginBottom="16dp"
         android:scrollbars="none"
         app:layout_constraintBottom_toTopOf="@id/btn_tumau_confirm"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/title_tumau"
                 android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+                android:textColor="@color/green_dark"
                 android:textStyle="bold" />
 
             <TextView
@@ -35,15 +40,15 @@
                 android:layout_marginTop="8dp"
                 android:text="@string/desc_tumau"
                 android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-                android:textColor="?android:attr/textColorSecondary" />
+                android:textColor="@color/text_secondary" />
 
-            <!-- Question 1: Objectifs -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="@string/question_objectives"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold" />
 
             <com.google.android.material.chip.ChipGroup
@@ -56,30 +61,34 @@
 
                 <com.google.android.material.chip.Chip
                     style="@style/Widget.Material3.Chip.Filter"
+                    android:id="@+id/chip_objective_job"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/objective_job" />
 
                 <com.google.android.material.chip.Chip
                     style="@style/Widget.Material3.Chip.Filter"
+                    android:id="@+id/chip_objective_career"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/objective_career" />
 
                 <com.google.android.material.chip.Chip
                     style="@style/Widget.Material3.Chip.Filter"
+                    android:id="@+id/chip_objective_pleasure"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/objective_pleasure" />
+
             </com.google.android.material.chip.ChipGroup>
 
-            <!-- Question 2: Intérêts -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/question_interests"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold" />
 
             <com.google.android.material.chip.ChipGroup
@@ -90,36 +99,41 @@
 
                 <com.google.android.material.chip.Chip
                     style="@style/Widget.Material3.Chip.Filter"
+                    android:id="@+id/chip_interest_tech"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/interest_tech" />
 
                 <com.google.android.material.chip.Chip
                     style="@style/Widget.Material3.Chip.Filter"
+                    android:id="@+id/chip_interest_design"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/interest_design" />
 
                 <com.google.android.material.chip.Chip
                     style="@style/Widget.Material3.Chip.Filter"
+                    android:id="@+id/chip_interest_business"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/interest_business" />
 
                 <com.google.android.material.chip.Chip
                     style="@style/Widget.Material3.Chip.Filter"
+                    android:id="@+id/chip_interest_soft_skills"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/interest_soft_skills" />
+
             </com.google.android.material.chip.ChipGroup>
 
-            <!-- Question 3: Niveau -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/question_level"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold" />
 
             <RadioGroup
@@ -130,31 +144,38 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:id="@+id/rb_beginner"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/level_beginner"
-                    android:layout_weight="1" />
+                    android:textColor="@color/text_primary" />
 
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:id="@+id/rb_intermediate"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/level_intermediate"
-                    android:layout_weight="1" />
+                    android:textColor="@color/text_primary" />
 
                 <RadioButton
-                    android:layout_width="wrap_content"
+                    android:id="@+id/rb_expert"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/level_expert"
-                    android:layout_weight="1" />
+                    android:textColor="@color/text_primary" />
+
             </RadioGroup>
 
-            <!-- Question 4: Rythme -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
                 android:text="@string/question_pace"
                 android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
+                android:textColor="@color/text_primary"
                 android:textStyle="bold" />
 
             <com.google.android.material.button.MaterialButtonToggleGroup
@@ -162,10 +183,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                app:singleSelection="true">
+                app:singleSelection="true"
+                app:selectionRequired="true">
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:id="@+id/btn_pace_casual"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -173,6 +196,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:id="@+id/btn_pace_moderate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -180,36 +204,30 @@
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:id="@+id/btn_pace_intensive"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/pace_intensive" />
+
             </com.google.android.material.button.MaterialButtonToggleGroup>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:text="@string/question_employer"
-                android:textAppearance="@style/TextAppearance.Material3.BodySmall" />
-
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/employer_recruit"
-                android:textAllCaps="false" />
-
         </LinearLayout>
+
     </ScrollView>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_tumau_confirm"
-        style="@style/Widget.Material3.Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
         android:text="@string/btn_confirm"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/green_primary"
+        app:cornerRadius="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
