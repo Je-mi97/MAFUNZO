@@ -1,6 +1,7 @@
 package com.example.mafunzo;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.RadioButton;
@@ -18,7 +19,6 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TumauActivity extends AppCompatActivity {
@@ -53,7 +53,6 @@ public class TumauActivity extends AppCompatActivity {
         });
     }
 
-    // 3. Validation des sélections
     private boolean validateSelections() {
         if (cgObjectives.getCheckedChipId() == -1) {
             Toast.makeText(this, "Veuillez choisir un objectif", Toast.LENGTH_SHORT).show();
@@ -74,22 +73,18 @@ public class TumauActivity extends AppCompatActivity {
         return true;
     }
 
-    // 2. Persistance des Données (SharedPreferences)
     private void saveUserData() {
         SharedPreferences sharedPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        // Récupération des données passées par WAU via Intent
         editor.putString("firstName", getIntent().getStringExtra("firstName"));
         editor.putString("lastName", getIntent().getStringExtra("lastName"));
         editor.putString("email", getIntent().getStringExtra("email"));
 
-        // Récupération de l'objectif
         int objectiveId = cgObjectives.getCheckedChipId();
         Chip chipObjective = findViewById(objectiveId);
         editor.putString("objective", chipObjective.getText().toString());
 
-        // Récupération des intérêts
         List<Integer> interestIds = cgInterests.getCheckedChipIds();
         StringBuilder interests = new StringBuilder();
         for (Integer id : interestIds) {
@@ -98,21 +93,21 @@ public class TumauActivity extends AppCompatActivity {
         }
         editor.putString("interests", interests.toString());
 
-        // Récupération du niveau
         int levelId = rgLevel.getCheckedRadioButtonId();
         RadioButton rbLevel = findViewById(levelId);
         editor.putString("level", rbLevel.getText().toString());
 
-        // Récupération du rythme
         int paceId = togglePace.getCheckedButtonId();
         MaterialButton btnPace = findViewById(paceId);
         editor.putString("pace", btnPace.getText().toString());
 
         editor.apply();
 
-        Toast.makeText(this, "Inscription terminée et sauvegardée !", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Inscription terminée !", Toast.LENGTH_LONG).show();
         
-        // Terminer et fermer le flux d'inscription
+        // CORRECTION A : Navigation vers LoadingActivity avant de fermer
+        Intent intent = new Intent(TumauActivity.this, LoadingActivity.class);
+        startActivity(intent);
         finishAffinity();
     }
 }

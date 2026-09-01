@@ -42,13 +42,10 @@ public class LoginActivity extends AppCompatActivity {
 
         btnLogin.setOnClickListener(v -> {
             if (validateLogin()) {
-                // Logique de connexion réussie
-                Toast.makeText(this, "Connexion réussie !", Toast.LENGTH_SHORT).show();
-                
-                // Redirection vers le Dashboard (HOME)
-                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                // Succès : Passage par l'écran de chargement animé
+                Intent intent = new Intent(LoginActivity.this, LoadingActivity.class);
                 startActivity(intent);
-                finishAffinity(); // On ferme l'écran de login pour ne pas y revenir
+                finishAffinity(); 
             }
         });
 

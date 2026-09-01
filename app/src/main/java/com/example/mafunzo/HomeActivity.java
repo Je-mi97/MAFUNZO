@@ -1,6 +1,7 @@
 package com.example.mafunzo;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.TextView;
@@ -34,14 +35,20 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
-        // Initialisation des listes
+        // 1. Personnalisation du Header Premium
+        TextView tvGreeting = findViewById(R.id.tv_greeting);
+        SharedPreferences prefs = getSharedPreferences("UserPrefs", MODE_PRIVATE);
+        String firstName = prefs.getString("firstName", "Étudiant");
+        tvGreeting.setText(getString(R.string.greeting_hello, firstName));
+
+        // 2. Initialisation des listes
         rvSubjects = findViewById(R.id.rv_subjects);
         rvCareers = findViewById(R.id.rv_careers);
         
         setupSeeAllButtons();
         startAutoScroll();
         
-        // Navigation basse
+        // 3. Navigation basse
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -51,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             }
             if (itemId == R.id.nav_profile) {
-                Toast.makeText(this, "Profil", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Accès au Profil...", Toast.LENGTH_SHORT).show();
                 return true;
             }
             return false;
@@ -71,21 +78,19 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // Logique de défilement automatique pour Sujets et Carrières
     private void startAutoScroll() {
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                if (scrollPosition < 10) { // On fait défiler une partie (ex: 10 premiers)
-                    scrollPosition++;
-                } else {
-                    scrollPosition = 0;
-                }
-                rvSubjects.smoothScrollToPosition(scrollPosition);
-                rvCareers.smoothScrollToPosition(scrollPosition);
-                autoScrollHandler.postDelayed(this, 3000); // Toutes les 3 secondes
+                if (scrollPosition < 5) scrollPosition++;
+                else scrollPosition = 0;
+                
+                if (rvSubjects.getAdapter() != null) rvSubjects.smoothScrollToPosition(scrollPosition);
+                if (rvCareers.getAdapter() != null) rvCareers.smoothScrollToPosition(scrollPosition);
+                
+                autoScrollHandler.postDelayed(this, 4000); // Défilement toutes les 4s
             }
         };
-        autoScrollHandler.postDelayed(runnable, 3000);
+        autoScrollHandler.postDelayed(runnable, 4000);
     }
 }
