@@ -15,18 +15,14 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.mafunzo.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class HomeActivity
-        extends AppCompatActivity {
-
-    private BottomNavigationView bottomNavigationView;
+public class HomeActivity extends AppCompatActivity {
 
     private final ActivityResultLauncher<String>
             notificationPermissionLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.RequestPermission(),
                     isGranted -> {
-                        // La décision de l'utilisateur est conservée
-                        // par Android.
+                        // Rien à faire immédiatement.
                     }
             );
 
@@ -34,13 +30,21 @@ public class HomeActivity
     protected void onCreate(
             Bundle savedInstanceState
     ) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(
                 R.layout.activity_home
         );
 
-        bottomNavigationView =
+        setupNavigation();
+
+        requestNotificationPermission();
+    }
+
+    private void setupNavigation() {
+
+        BottomNavigationView bottomNavigationView =
                 findViewById(
                         R.id.bottom_navigation
                 );
@@ -52,19 +56,17 @@ public class HomeActivity
                                         R.id.nav_host_fragment
                                 );
 
-        if (navHostFragment != null) {
-
-            NavController navController =
-                    navHostFragment
-                            .getNavController();
-
-            NavigationUI.setupWithNavController(
-                    bottomNavigationView,
-                    navController
-            );
+        if (navHostFragment == null) {
+            return;
         }
 
-        requestNotificationPermission();
+        NavController navController =
+                navHostFragment.getNavController();
+
+        NavigationUI.setupWithNavController(
+                bottomNavigationView,
+                navController
+        );
     }
 
     private void requestNotificationPermission() {

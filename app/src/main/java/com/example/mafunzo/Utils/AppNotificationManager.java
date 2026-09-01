@@ -32,8 +32,8 @@ public class AppNotificationManager {
             "UserNotifications";
 
     private final Context context;
-
     private final SharedPreferences preferences;
+    private final AppSettings appSettings;
 
     public AppNotificationManager(Context context) {
 
@@ -45,6 +45,9 @@ public class AppNotificationManager {
                         PREFS_NAME,
                         Context.MODE_PRIVATE
                 );
+
+        this.appSettings =
+                new AppSettings(this.context);
 
         createNotificationChannels();
     }
@@ -104,11 +107,12 @@ public class AppNotificationManager {
             boolean learning
     ) {
 
-        saveToHistory(
-                title,
-                message
-        );
+        // Réglage interne de MAFUNZO
+        if (!appSettings.areNotificationsEnabled()) {
+            return;
+        }
 
+        // Permission Android 13+
         if (Build.VERSION.SDK_INT >=
                 Build.VERSION_CODES.TIRAMISU) {
 
@@ -119,6 +123,12 @@ public class AppNotificationManager {
                 return;
             }
         }
+
+        // Historique interne
+        saveToHistory(
+                title,
+                message
+        );
 
         String channelId =
                 learning
@@ -136,8 +146,12 @@ public class AppNotificationManager {
                         .setSmallIcon(
                                 R.drawable.ic_notification
                         )
-                        .setContentTitle(title)
-                        .setContentText(message)
+                        .setContentTitle(
+                                title
+                        )
+                        .setContentText(
+                                message
+                        )
                         .setStyle(
                                 new NotificationCompat.BigTextStyle()
                                         .bigText(message)
@@ -199,9 +213,11 @@ public class AppNotificationManager {
                 .apply();
     }
 
-    public List<NotificationItem> getNotificationHistory() {
+    public List<NotificationItem>
+    getNotificationHistory() {
 
-        List<NotificationItem> notifications =
+        List<NotificationItem>
+                notifications =
                 new ArrayList<>();
 
         int count =

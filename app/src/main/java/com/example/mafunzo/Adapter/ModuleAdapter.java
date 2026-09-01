@@ -11,18 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mafunzo.Activity.ModuleDetailActivity;
+import com.example.mafunzo.Activity.PaymentActivity;
 import com.example.mafunzo.Model.Course;
 import com.example.mafunzo.Model.Module;
 import com.example.mafunzo.R;
+import com.example.mafunzo.Utils.PaymentManager;
 import com.example.mafunzo.Utils.ProgressManager;
 
 public class ModuleAdapter
-        extends RecyclerView.Adapter<ModuleAdapter.ModuleViewHolder> {
+        extends RecyclerView.Adapter<
+        ModuleAdapter.ModuleViewHolder> {
 
     private final Context context;
     private final Course course;
 
     private final ProgressManager progressManager;
+    private final PaymentManager paymentManager;
 
     public ModuleAdapter(
             Context context,
@@ -34,6 +38,9 @@ public class ModuleAdapter
 
         this.progressManager =
                 new ProgressManager(context);
+
+        this.paymentManager =
+                new PaymentManager(context);
     }
 
     @NonNull
@@ -44,13 +51,16 @@ public class ModuleAdapter
     ) {
 
         View view =
-                LayoutInflater.from(context).inflate(
-                        R.layout.item_module,
-                        parent,
-                        false
-                );
+                LayoutInflater.from(context)
+                        .inflate(
+                                R.layout.item_module,
+                                parent,
+                                false
+                        );
 
-        return new ModuleViewHolder(view);
+        return new ModuleViewHolder(
+                view
+        );
     }
 
     @Override
@@ -60,13 +70,22 @@ public class ModuleAdapter
     ) {
 
         Module module =
-                course.getModules().get(position);
+                course.getModules()
+                        .get(position);
+
+        boolean unlocked =
+                course.isFree()
+                        || paymentManager
+                        .isCoursePurchased(
+                                course.getId()
+                        );
 
         boolean completed =
-                progressManager.isModuleCompleted(
-                        course.getId(),
-                        module.getId()
-                );
+                progressManager
+                        .isModuleCompleted(
+                                course.getId(),
+                                module.getId()
+                        );
 
         module.setCompleted(
                 completed
@@ -84,7 +103,25 @@ public class ModuleAdapter
                 module.getContentType()
         );
 
-        if (completed) {
+        holder.tvDuration.setText(
+                module.getFormattedDuration(
+                        context
+                )
+        );
+
+        if (!unlocked) {
+
+            holder.tvStatus.setText(
+                    "🔒 Verrouillé"
+            );
+
+            holder.tvStatus.setTextColor(
+                    context.getColor(
+                            R.color.error
+                    )
+            );
+
+        } else if (completed) {
 
             holder.tvStatus.setText(
                     "✓ Terminé"
@@ -109,31 +146,57 @@ public class ModuleAdapter
             );
         }
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(
+                v -> {
 
-            Intent intent =
-                    new Intent(
-                            context,
-                            ModuleDetailActivity.class
+                    if (!unlocked) {
+
+                        Intent intent =
+                                new Intent(
+                                        context,
+                                        PaymentActivity.class
+                                );
+
+                        intent.putExtra(
+                                "course_id",
+                                course.getId()
+                        );
+
+                        context.startActivity(
+                                intent
+                        );
+
+                        return;
+                    }
+
+                    Intent intent =
+                            new Intent(
+                                    context,
+                                    ModuleDetailActivity.class
+                            );
+
+                    intent.putExtra(
+                            "module",
+                            module
                     );
 
-            intent.putExtra(
-                    "module",
-                    module
-            );
+                    intent.putExtra(
+                            "course_id",
+                            course.getId()
+                    );
 
-            intent.putExtra(
-                    "course_id",
-                    course.getId()
-            );
-
-            context.startActivity(intent);
-        });
+                    context.startActivity(
+                            intent
+                    );
+                }
+        );
     }
 
     @Override
     public int getItemCount() {
-        return course.getModules().size();
+
+        return course.getModules()
+                .size();
     }
 
     static class ModuleViewHolder
@@ -142,6 +205,7 @@ public class ModuleAdapter
         TextView tvTitle;
         TextView tvDescription;
         TextView tvType;
+        TextView tvDuration;
         TextView tvStatus;
 
         ModuleViewHolder(
@@ -163,6 +227,11 @@ public class ModuleAdapter
             tvType =
                     itemView.findViewById(
                             R.id.tv_module_type
+                    );
+
+            tvDuration =
+                    itemView.findViewById(
+                            R.id.tv_module_duration
                     );
 
             tvStatus =

@@ -1,5 +1,6 @@
 package com.example.mafunzo.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -14,9 +15,12 @@ import com.example.mafunzo.Adapter.ModuleAdapter;
 import com.example.mafunzo.Model.Course;
 import com.example.mafunzo.Model.Module;
 import com.example.mafunzo.R;
+import com.example.mafunzo.Utils.PaymentManager;
 import com.example.mafunzo.Utils.ProgressManager;
+import com.google.android.material.button.MaterialButton;
 
-public class CourseDetailActivity extends AppCompatActivity {
+public class CourseDetailActivity
+        extends AppCompatActivity {
 
     private Course course;
 
@@ -25,18 +29,23 @@ public class CourseDetailActivity extends AppCompatActivity {
     private TextView tvDescription;
     private TextView tvInstructor;
     private TextView tvDuration;
+    private TextView tvPrice;
     private TextView tvProgress;
 
     private ProgressBar progressBar;
 
+    private MaterialButton btnPurchase;
+
     private ModuleAdapter moduleAdapter;
 
     private ProgressManager progressManager;
+    private PaymentManager paymentManager;
 
     @Override
     protected void onCreate(
             @Nullable Bundle savedInstanceState
     ) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(
@@ -45,6 +54,9 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         progressManager =
                 new ProgressManager(this);
+
+        paymentManager =
+                new PaymentManager(this);
 
         ImageButton btnBack =
                 findViewById(
@@ -76,6 +88,11 @@ public class CourseDetailActivity extends AppCompatActivity {
                         R.id.tv_detail_duration
                 );
 
+        tvPrice =
+                findViewById(
+                        R.id.tv_detail_price
+                );
+
         tvProgress =
                 findViewById(
                         R.id.tv_detail_progress
@@ -84,6 +101,11 @@ public class CourseDetailActivity extends AppCompatActivity {
         progressBar =
                 findViewById(
                         R.id.progress_detail
+                );
+
+        btnPurchase =
+                findViewById(
+                        R.id.btn_purchase_course
                 );
 
         RecyclerView recyclerModules =
@@ -102,6 +124,7 @@ public class CourseDetailActivity extends AppCompatActivity {
                         );
 
         if (course == null) {
+
             finish();
             return;
         }
@@ -120,11 +143,16 @@ public class CourseDetailActivity extends AppCompatActivity {
                 moduleAdapter
         );
 
+        btnPurchase.setOnClickListener(
+                v -> openPayment()
+        );
+
         displayCourse();
     }
 
     @Override
     protected void onResume() {
+
         super.onResume();
 
         if (course == null) {
@@ -140,12 +168,20 @@ public class CourseDetailActivity extends AppCompatActivity {
 
     private void displayCourse() {
 
-        int progress =
-                progressManager.calculateCourseProgress(
-                        course
-                );
-
         updateModulesState();
+
+        int progress =
+                progressManager
+                        .calculateCourseProgress(
+                                course
+                        );
+
+        boolean purchased =
+                course.isFree()
+                        || paymentManager
+                        .isCoursePurchased(
+                                course.getId()
+                        );
 
         tvTitle.setText(
                 course.getTitle()
@@ -166,8 +202,9 @@ public class CourseDetailActivity extends AppCompatActivity {
 
         tvDuration.setText(
                 "Durée : "
-                        + course.getDuration()
-                        + " heures"
+                        + course.getFormattedDuration(
+                        this
+                )
         );
 
         tvProgress.setText(
@@ -177,21 +214,86 @@ public class CourseDetailActivity extends AppCompatActivity {
         progressBar.setProgress(
                 progress
         );
+
+        if (course.isFree()) {
+
+            tvPrice.setText(
+                    "Gratuit"
+            );
+
+            btnPurchase.setVisibility(
+                    MaterialButton.GONE
+            );
+
+        } else if (purchased) {
+
+            tvPrice.setText(
+                    "✓ Formation achetée"
+            );
+
+            btnPurchase.setVisibility(
+                    MaterialButton.VISIBLE
+            );
+
+            btnPurchase.setText(
+                    "✓ Formation débloquée"
+            );
+
+            btnPurchase.setEnabled(
+                    false
+            );
+
+        } else {
+
+            tvPrice.setText(
+                    course.getFormattedPrice()
+            );
+
+            btnPurchase.setVisibility(
+                    MaterialButton.VISIBLE
+            );
+
+            btnPurchase.setText(
+                    "Acheter la formation"
+            );
+
+            btnPurchase.setEnabled(
+                    true
+            );
+        }
     }
 
     private void updateModulesState() {
 
-        for (Module module : course.getModules()) {
+        for (Module module :
+                course.getModules()) {
 
             boolean completed =
-                    progressManager.isModuleCompleted(
-                            course.getId(),
-                            module.getId()
-                    );
+                    progressManager
+                            .isModuleCompleted(
+                                    course.getId(),
+                                    module.getId()
+                            );
 
             module.setCompleted(
                     completed
             );
         }
+    }
+
+    private void openPayment() {
+
+        Intent intent =
+                new Intent(
+                        this,
+                        PaymentActivity.class
+                );
+
+        intent.putExtra(
+                "course_id",
+                course.getId()
+        );
+
+        startActivity(intent);
     }
 }

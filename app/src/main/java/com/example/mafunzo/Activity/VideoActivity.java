@@ -1,10 +1,10 @@
 package com.example.mafunzo.Activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageButton;
 import android.widget.Toast;
-import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,30 +15,37 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
 import com.example.mafunzo.R;
-import com.example.mafunzo.Utils.AppNotificationManager;
 import com.example.mafunzo.Utils.ProgressManager;
 
 public class VideoActivity extends AppCompatActivity {
 
     private PlayerView playerView;
+
     private ExoPlayer player;
 
-    private String videoName;
+    private String videoResource;
+
     private String courseId;
+
     private String moduleId;
 
     private long savedPosition = 0L;
-    private boolean positionRestored = false;
+
+    private boolean positionRestored =
+            false;
+
 
     @Override
     protected void onCreate(
             @Nullable Bundle savedInstanceState
     ) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(
                 R.layout.activity_video
         );
+
 
         ImageButton btnBack =
                 findViewById(
@@ -50,41 +57,133 @@ public class VideoActivity extends AppCompatActivity {
                         R.id.player_view
                 );
 
+
         btnBack.setOnClickListener(
                 v -> finish()
         );
 
-        videoName =
-                getIntent().getStringExtra(
-                        "video_name"
-                );
+
+        videoResource =
+                getIntent()
+                        .getStringExtra(
+                                "video_resource"
+                        );
+
 
         courseId =
-                getIntent().getStringExtra(
-                        "course_id"
-                );
+                getIntent()
+                        .getStringExtra(
+                                "course_id"
+                        );
+
 
         moduleId =
-                getIntent().getStringExtra(
-                        "module_id"
-                );
+                getIntent()
+                        .getStringExtra(
+                                "module_id"
+                        );
 
-        if (videoName == null
-                || videoName.trim().isEmpty()) {
+
+        if (videoResource == null
+                || videoResource.trim().isEmpty()) {
+
+            Toast.makeText(
+                    this,
+                    "Vidéo introuvable.",
+                    Toast.LENGTH_LONG
+            ).show();
 
             finish();
+
             return;
         }
 
+
+        /*
+         * Si la ressource est une URL,
+         * on l'ouvre dans le navigateur
+         * ou dans l'application associée.
+         */
+        if (isExternalVideo(
+                videoResource
+        )) {
+
+            openExternalVideo();
+
+            finish();
+
+            return;
+        }
+
+
+        /*
+         * Sinon, il s'agit d'une vidéo
+         * locale présente dans res/raw.
+         */
         loadSavedPosition();
     }
 
+
+    private boolean isExternalVideo(
+            String resource
+    ) {
+
+        return resource.startsWith(
+                "http://"
+        )
+                || resource.startsWith(
+                "https://"
+        );
+    }
+
+
+    private void openExternalVideo() {
+
+        try {
+
+            Intent intent =
+                    new Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(
+                                    videoResource
+                            )
+                    );
+
+            startActivity(intent);
+
+        } catch (Exception e) {
+
+            Toast.makeText(
+                    this,
+                    "Impossible d'ouvrir la vidéo.",
+                    Toast.LENGTH_LONG
+            ).show();
+        }
+    }
+
+
     @Override
     protected void onStart() {
+
         super.onStart();
+
+
+        /*
+         * Pour une vidéo externe,
+         * aucun ExoPlayer n'est nécessaire.
+         */
+        if (isExternalVideo(
+                videoResource
+        )) {
+
+            return;
+        }
+
 
         initializePlayer();
     }
+
+// POSITION DE LECTURE
 
     private String getProgressKey() {
 
@@ -93,6 +192,7 @@ public class VideoActivity extends AppCompatActivity {
                 + moduleId
                 + "_video_position";
     }
+
 
     private void loadSavedPosition() {
 
@@ -107,27 +207,40 @@ public class VideoActivity extends AppCompatActivity {
                         );
     }
 
+
     private void initializePlayer() {
 
         int resourceId =
-                getResources().getIdentifier(
-                        videoName,
-                        "raw",
-                        getPackageName()
-                );
+                getResources()
+                        .getIdentifier(
+                                videoResource,
+                                "raw",
+                                getPackageName()
+                        );
+
 
         if (resourceId == 0) {
+
+            Toast.makeText(
+                    this,
+                    "Ressource vidéo introuvable.",
+                    Toast.LENGTH_LONG
+            ).show();
+
             return;
         }
+
 
         player =
                 new ExoPlayer.Builder(
                         this
                 ).build();
 
+
         playerView.setPlayer(
                 player
         );
+
 
         Uri videoUri =
                 Uri.parse(
@@ -137,14 +250,17 @@ public class VideoActivity extends AppCompatActivity {
                                 + resourceId
                 );
 
+
         MediaItem mediaItem =
                 MediaItem.fromUri(
                         videoUri
                 );
 
+
         player.setMediaItem(
                 mediaItem
         );
+
 
         player.addListener(
                 new Player.Listener() {
@@ -162,6 +278,7 @@ public class VideoActivity extends AppCompatActivity {
                             player.play();
                         }
 
+
                         if (playbackState ==
                                 Player.STATE_ENDED) {
 
@@ -170,6 +287,7 @@ public class VideoActivity extends AppCompatActivity {
                             markVideoAsCompleted();
                         }
                     }
+
 
                     @Override
                     public void onPlayerError(
@@ -185,41 +303,54 @@ public class VideoActivity extends AppCompatActivity {
                 }
         );
 
+
         player.prepare();
     }
+
 
     private void restorePosition() {
 
         if (positionRestored) {
+
             return;
         }
+
 
         positionRestored = true;
 
+
         if (savedPosition <= 0) {
+
             return;
         }
 
+
         long duration =
                 player.getDuration();
+
 
         if (duration <= 0
                 || savedPosition >= duration) {
 
             clearSavedPosition();
+
             return;
         }
+
 
         player.seekTo(
                 savedPosition
         );
     }
 
+
     private void saveCurrentPosition() {
 
         if (player == null) {
+
             return;
         }
+
 
         if (player.getPlaybackState()
                 == Player.STATE_ENDED) {
@@ -227,12 +358,16 @@ public class VideoActivity extends AppCompatActivity {
             return;
         }
 
+
         long position =
                 player.getCurrentPosition();
 
+
         if (position <= 0) {
+
             return;
         }
+
 
         getSharedPreferences(
                 "VideoProgress",
@@ -245,6 +380,7 @@ public class VideoActivity extends AppCompatActivity {
                 )
                 .apply();
     }
+
 
     private void clearSavedPosition() {
 
@@ -259,6 +395,7 @@ public class VideoActivity extends AppCompatActivity {
                 .apply();
     }
 
+
     private void markVideoAsCompleted() {
 
         if (courseId == null
@@ -267,8 +404,10 @@ public class VideoActivity extends AppCompatActivity {
             return;
         }
 
+
         ProgressManager progressManager =
                 new ProgressManager(this);
+
 
         progressManager.notifyVideoCompleted(
                 courseId,
@@ -276,28 +415,46 @@ public class VideoActivity extends AppCompatActivity {
         );
     }
 
+
     @Override
     protected void onStop() {
 
-        saveCurrentPosition();
-        releasePlayer();
+
+        // Pour les vidéos locales uniquement.
+
+        if (!isExternalVideo(
+                videoResource
+        )) {
+
+            saveCurrentPosition();
+
+            releasePlayer();
+        }
+
 
         super.onStop();
     }
+
 
     private void releasePlayer() {
 
         if (player != null) {
 
             player.release();
+
             player = null;
         }
 
+
         if (playerView != null) {
 
-            playerView.setPlayer(null);
+            playerView.setPlayer(
+                    null
+            );
         }
+
 
         positionRestored = false;
     }
+
 }

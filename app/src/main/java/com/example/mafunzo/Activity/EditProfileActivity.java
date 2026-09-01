@@ -1,8 +1,6 @@
 package com.example.mafunzo.Activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mafunzo.R;
+import com.example.mafunzo.Utils.UserPreferences;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
@@ -27,7 +26,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity
+        extends AppCompatActivity {
 
     private TextInputLayout tilFirstName;
     private TextInputLayout tilLastName;
@@ -45,14 +45,16 @@ public class EditProfileActivity extends AppCompatActivity {
     private MaterialButtonToggleGroup togglePace;
 
     private ShapeableImageView ivProfile;
+
     private MaterialButton btnChangePhoto;
     private MaterialButton btnSave;
 
-    private SharedPreferences userPrefs;
+    private UserPreferences userPreferences;
 
     private Uri selectedPhotoUri;
 
-    private final ActivityResultLauncher<String[]> imagePicker =
+    private final ActivityResultLauncher<String[]>
+            imagePicker =
             registerForActivityResult(
                     new ActivityResultContracts.OpenDocument(),
                     uri -> {
@@ -61,17 +63,18 @@ public class EditProfileActivity extends AppCompatActivity {
                             return;
                         }
 
-                        selectedPhotoUri = uri;
+                        selectedPhotoUri =
+                                uri;
 
                         try {
+
                             getContentResolver()
                                     .takePersistableUriPermission(
                                             uri,
                                             Intent.FLAG_GRANT_READ_URI_PERMISSION
                                     );
+
                         } catch (SecurityException ignored) {
-                            // Certains fournisseurs ne permettent pas
-                            // la persistance des permissions.
                         }
 
                         ivProfile.setImageURI(
@@ -81,18 +84,18 @@ public class EditProfileActivity extends AppCompatActivity {
             );
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(
+            Bundle savedInstanceState
+    ) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(
                 R.layout.activity_edit_profile
         );
 
-        userPrefs =
-                getSharedPreferences(
-                        "UserPrefs",
-                        Context.MODE_PRIVATE
-                );
+        userPreferences =
+                new UserPreferences(this);
 
         ImageButton btnBack =
                 findViewById(
@@ -184,25 +187,21 @@ public class EditProfileActivity extends AppCompatActivity {
     private void loadCurrentData() {
 
         etFirstName.setText(
-                userPrefs.getString(
-                        "firstName",
-                        ""
-                )
+                userPreferences.getFirstName()
         );
 
         etLastName.setText(
-                userPrefs.getString(
-                        "lastName",
-                        ""
-                )
+                userPreferences.getLastName()
         );
 
-        etEmail.setText(
-                userPrefs.getString(
-                        "email",
-                        ""
-                )
-        );
+        String email =
+                userPreferences.getEmail();
+
+        if (email.equals("Aucun e-mail")) {
+            email = "";
+        }
+
+        etEmail.setText(email);
 
         loadSavedPhoto();
 
@@ -214,13 +213,16 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void loadSavedPhoto() {
 
-        String photoUri =
-                userPrefs.getString(
-                        "profilePhotoUri",
-                        ""
-                );
+        if (ivProfile == null) {
+            return;
+        }
 
-        if (photoUri.isEmpty()) {
+        String photoUri =
+                userPreferences
+                        .getProfilePhotoUri();
+
+        if (photoUri == null
+                || photoUri.isEmpty()) {
 
             ivProfile.setImageResource(
                     R.drawable.ic_profile_placeholder
@@ -231,20 +233,16 @@ public class EditProfileActivity extends AppCompatActivity {
 
         try {
 
-            Uri uri =
+            selectedPhotoUri =
                     Uri.parse(photoUri);
 
-            getContentResolver()
-                    .takePersistableUriPermission(
-                            uri,
-                            Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    );
-
-            selectedPhotoUri = uri;
-
-            ivProfile.setImageURI(uri);
+            ivProfile.setImageURI(
+                    selectedPhotoUri
+            );
 
         } catch (Exception e) {
+
+            selectedPhotoUri = null;
 
             ivProfile.setImageResource(
                     R.drawable.ic_profile_placeholder
@@ -255,10 +253,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void selectObjective() {
 
         String objective =
-                userPrefs.getString(
-                        "objective",
-                        ""
-                );
+                userPreferences.getObjective();
 
         for (int i = 0;
              i < cgObjectives.getChildCount();
@@ -272,6 +267,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     .equals(objective)) {
 
                 chip.setChecked(true);
+
                 break;
             }
         }
@@ -280,10 +276,13 @@ public class EditProfileActivity extends AppCompatActivity {
     private void selectInterests() {
 
         String interests =
-                userPrefs.getString(
-                        "interests",
-                        ""
-                );
+                userPreferences.getInterests();
+
+        if (interests == null
+                || interests.isEmpty()) {
+
+            return;
+        }
 
         String[] selected =
                 interests.split(",");
@@ -296,17 +295,16 @@ public class EditProfileActivity extends AppCompatActivity {
                     (Chip) cgInterests.getChildAt(i);
 
             String chipText =
-                    chip.getText()
-                            .toString();
+                    chip.getText().toString();
 
-            for (String interest :
-                    selected) {
+            for (String interest : selected) {
 
                 if (chipText.equals(
                         interest.trim()
                 )) {
 
                     chip.setChecked(true);
+
                     break;
                 }
             }
@@ -316,25 +314,23 @@ public class EditProfileActivity extends AppCompatActivity {
     private void selectLevel() {
 
         String level =
-                userPrefs.getString(
-                        "level",
-                        ""
-                );
+                userPreferences.getLevel();
 
         for (int i = 0;
              i < rgLevel.getChildCount();
              i++) {
 
-            RadioButton radioButton =
+            RadioButton button =
                     (RadioButton)
                             rgLevel.getChildAt(i);
 
-            if (radioButton
+            if (button
                     .getText()
                     .toString()
                     .equals(level)) {
 
-                radioButton.setChecked(true);
+                button.setChecked(true);
+
                 break;
             }
         }
@@ -343,10 +339,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private void selectPace() {
 
         String pace =
-                userPrefs.getString(
-                        "pace",
-                        ""
-                );
+                userPreferences.getPace();
 
         for (int i = 0;
              i < togglePace.getChildCount();
@@ -431,7 +424,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
         tilEmail.setError(null);
 
-        if (cgObjectives.getCheckedChipId() == -1) {
+        if (cgObjectives
+                .getCheckedChipId() == -1) {
 
             Toast.makeText(
                     this,
@@ -442,7 +436,9 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        if (cgInterests.getCheckedChipIds().isEmpty()) {
+        if (cgInterests
+                .getCheckedChipIds()
+                .isEmpty()) {
 
             Toast.makeText(
                     this,
@@ -453,7 +449,8 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        if (rgLevel.getCheckedRadioButtonId() == -1) {
+        if (rgLevel
+                .getCheckedRadioButtonId() == -1) {
 
             Toast.makeText(
                     this,
@@ -464,7 +461,8 @@ public class EditProfileActivity extends AppCompatActivity {
             return;
         }
 
-        if (togglePace.getCheckedButtonId() == -1) {
+        if (togglePace
+                .getCheckedButtonId() == -1) {
 
             Toast.makeText(
                     this,
@@ -489,7 +487,8 @@ public class EditProfileActivity extends AppCompatActivity {
                 new StringBuilder();
 
         List<Integer> interestIds =
-                cgInterests.getCheckedChipIds();
+                cgInterests
+                        .getCheckedChipIds();
 
         for (Integer id : interestIds) {
 
@@ -498,7 +497,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
             interests
                     .append(
-                            chip.getText().toString()
+                            chip.getText()
+                                    .toString()
                     )
                     .append(",");
         }
@@ -523,53 +523,40 @@ public class EditProfileActivity extends AppCompatActivity {
                         .getText()
                         .toString();
 
-        SharedPreferences.Editor editor =
-                userPrefs.edit();
-
-        editor.putString(
-                "firstName",
+        userPreferences.setFirstName(
                 firstName
         );
 
-        editor.putString(
-                "lastName",
+        userPreferences.setLastName(
                 lastName
         );
 
-        editor.putString(
-                "email",
+        userPreferences.setEmail(
                 email
         );
 
-        editor.putString(
-                "objective",
+        userPreferences.setObjective(
                 objective
         );
 
-        editor.putString(
-                "interests",
+        userPreferences.setInterests(
                 interests.toString()
         );
 
-        editor.putString(
-                "level",
+        userPreferences.setLevel(
                 level
         );
 
-        editor.putString(
-                "pace",
+        userPreferences.setPace(
                 pace
         );
 
         if (selectedPhotoUri != null) {
 
-            editor.putString(
-                    "profilePhotoUri",
-                    selectedPhotoUri.toString()
+            userPreferences.setProfilePhotoUri(
+                    selectedPhotoUri
             );
         }
-
-        editor.apply();
 
         Toast.makeText(
                 this,

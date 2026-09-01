@@ -12,19 +12,27 @@ import java.util.Locale;
 
 public class ProgressManager {
 
-    private static final String PREFS_NAME = "CourseProgress";
+    private static final String PREFS_NAME =
+            "CourseProgress";
 
     private final SharedPreferences preferences;
     private final Context context;
 
+    private final AppSettings appSettings;
+
     public ProgressManager(Context context) {
 
-        this.context = context.getApplicationContext();
+        this.context =
+                context.getApplicationContext();
 
-        preferences = this.context.getSharedPreferences(
-                PREFS_NAME,
-                Context.MODE_PRIVATE
-        );
+        preferences =
+                this.context.getSharedPreferences(
+                        PREFS_NAME,
+                        Context.MODE_PRIVATE
+                );
+
+        appSettings =
+                new AppSettings(this.context);
     }
 
     public void markModuleCompleted(
@@ -42,205 +50,7 @@ public class ProgressManager {
             return;
         }
 
-        notifyModuleCompleted(
-                courseId,
-                moduleId
-        );
-    }
-
-    public boolean markModuleCompletedSilently(
-            String courseId,
-            String moduleId
-    ) {
-
-        String key = courseId + "_" + moduleId;
-
-        boolean alreadyCompleted =
-                preferences.getBoolean(
-                        key,
-                        false
-                );
-
-        if (alreadyCompleted) {
-            return false;
-        }
-
-        String date =
-                new SimpleDateFormat(
-                        "dd/MM/yyyy HH:mm",
-                        Locale.getDefault()
-                ).format(new Date());
-
-        preferences.edit()
-                .putBoolean(key, true)
-                .putString(key + "_date", date)
-                .apply();
-
-        return true;
-    }
-
-    private void notifyModuleCompleted(
-            String courseId,
-            String moduleId
-    ) {
-
-        SharedPreferences settings =
-                context.getSharedPreferences(
-                        "AppSettings",
-                        Context.MODE_PRIVATE
-                );
-
-        boolean notificationsEnabled =
-                settings.getBoolean(
-                        "notificationsEnabled",
-                        true
-                );
-
-        if (!notificationsEnabled) {
-            return;
-        }
-
-        Course course =
-                CourseRepository.getCourseById(
-                        courseId
-                );
-
-        if (course == null) {
-            return;
-        }
-
-        Module completedModule = null;
-
-        for (Module module : course.getModules()) {
-
-            if (module.getId().equals(moduleId)) {
-                completedModule = module;
-                break;
-            }
-        }
-
-        if (completedModule == null) {
-            return;
-        }
-
-        AppNotificationManager manager =
-                new AppNotificationManager(context);
-
-        manager.showNotification(
-                "Module terminé 🎉",
-                course.getTitle()
-                        + " — "
-                        + completedModule.getTitle(),
-                true
-        );
-    }
-
-    public void notifyVideoCompleted(
-            String courseId,
-            String moduleId
-    ) {
-
-        boolean newlyCompleted =
-                markModuleCompletedSilently(
-                        courseId,
-                        moduleId
-                );
-
-        if (!newlyCompleted) {
-            return;
-        }
-
-        sendSpecificNotification(
-                "Vidéo terminée 🎥",
-                courseId,
-                moduleId
-        );
-    }
-
-    public void notifyQuizPassed(
-            String courseId,
-            String moduleId,
-            int percentage
-    ) {
-
-        boolean newlyCompleted =
-                markModuleCompletedSilently(
-                        courseId,
-                        moduleId
-                );
-
-        if (!newlyCompleted) {
-            return;
-        }
-
-        SharedPreferences settings =
-                context.getSharedPreferences(
-                        "AppSettings",
-                        Context.MODE_PRIVATE
-                );
-
-        boolean notificationsEnabled =
-                settings.getBoolean(
-                        "notificationsEnabled",
-                        true
-                );
-
-        if (!notificationsEnabled) {
-            return;
-        }
-
-        Course course =
-                CourseRepository.getCourseById(
-                        courseId
-                );
-
-        if (course == null) {
-            return;
-        }
-
-        Module module = findModule(
-                course,
-                moduleId
-        );
-
-        if (module == null) {
-            return;
-        }
-
-        AppNotificationManager manager =
-                new AppNotificationManager(context);
-
-        manager.showNotification(
-                "Quiz réussi 🎯",
-                course.getTitle()
-                        + " — "
-                        + module.getTitle()
-                        + " : "
-                        + percentage
-                        + " %",
-                true
-        );
-    }
-
-    private void sendSpecificNotification(
-            String title,
-            String courseId,
-            String moduleId
-    ) {
-
-        SharedPreferences settings =
-                context.getSharedPreferences(
-                        "AppSettings",
-                        Context.MODE_PRIVATE
-                );
-
-        boolean notificationsEnabled =
-                settings.getBoolean(
-                        "notificationsEnabled",
-                        true
-                );
-
-        if (!notificationsEnabled) {
+        if (!appSettings.areNotificationsEnabled()) {
             return;
         }
 
@@ -264,13 +74,163 @@ public class ProgressManager {
         }
 
         AppNotificationManager manager =
-                new AppNotificationManager(context);
+                new AppNotificationManager(
+                        context
+                );
 
         manager.showNotification(
-                title,
+                "Module terminé 🎉",
                 course.getTitle()
                         + " — "
                         + module.getTitle(),
+                true
+        );
+    }
+
+    public boolean markModuleCompletedSilently(
+            String courseId,
+            String moduleId
+    ) {
+
+        String key =
+                courseId + "_" + moduleId;
+
+        boolean alreadyCompleted =
+                preferences.getBoolean(
+                        key,
+                        false
+                );
+
+        if (alreadyCompleted) {
+            return false;
+        }
+
+        String date =
+                new SimpleDateFormat(
+                        "dd/MM/yyyy HH:mm",
+                        Locale.getDefault()
+                ).format(
+                        new Date()
+                );
+
+        preferences.edit()
+                .putBoolean(
+                        key,
+                        true
+                )
+                .putString(
+                        key + "_date",
+                        date
+                )
+                .apply();
+
+        return true;
+    }
+
+    public void notifyVideoCompleted(
+            String courseId,
+            String moduleId
+    ) {
+
+        boolean newlyCompleted =
+                markModuleCompletedSilently(
+                        courseId,
+                        moduleId
+                );
+
+        if (!newlyCompleted) {
+            return;
+        }
+
+        if (!appSettings.areNotificationsEnabled()) {
+            return;
+        }
+
+        Course course =
+                CourseRepository.getCourseById(
+                        courseId
+                );
+
+        if (course == null) {
+            return;
+        }
+
+        Module module =
+                findModule(
+                        course,
+                        moduleId
+                );
+
+        if (module == null) {
+            return;
+        }
+
+        AppNotificationManager manager =
+                new AppNotificationManager(
+                        context
+                );
+
+        manager.showNotification(
+                "Vidéo terminée 🎥",
+                course.getTitle()
+                        + " — "
+                        + module.getTitle(),
+                true
+        );
+    }
+
+    public void notifyQuizPassed(
+            String courseId,
+            String moduleId,
+            int percentage
+    ) {
+
+        boolean newlyCompleted =
+                markModuleCompletedSilently(
+                        courseId,
+                        moduleId
+                );
+
+        if (!newlyCompleted) {
+            return;
+        }
+
+        if (!appSettings.areNotificationsEnabled()) {
+            return;
+        }
+
+        Course course =
+                CourseRepository.getCourseById(
+                        courseId
+                );
+
+        if (course == null) {
+            return;
+        }
+
+        Module module =
+                findModule(
+                        course,
+                        moduleId
+                );
+
+        if (module == null) {
+            return;
+        }
+
+        AppNotificationManager manager =
+                new AppNotificationManager(
+                        context
+                );
+
+        manager.showNotification(
+                "Quiz réussi 🎯",
+                course.getTitle()
+                        + " — "
+                        + module.getTitle()
+                        + " : "
+                        + percentage
+                        + " %",
                 true
         );
     }
@@ -280,9 +240,12 @@ public class ProgressManager {
             String moduleId
     ) {
 
-        for (Module module : course.getModules()) {
+        for (Module module :
+                course.getModules()) {
 
-            if (module.getId().equals(moduleId)) {
+            if (module.getId()
+                    .equals(moduleId)) {
+
                 return module;
             }
         }
@@ -307,7 +270,9 @@ public class ProgressManager {
     ) {
 
         return preferences.getString(
-                courseId + "_" + moduleId + "_date",
+                courseId + "_"
+                        + moduleId
+                        + "_date",
                 ""
         );
     }
@@ -322,12 +287,14 @@ public class ProgressManager {
 
         int completedModules = 0;
 
-        for (Module module : course.getModules()) {
+        for (Module module :
+                course.getModules()) {
 
             if (isModuleCompleted(
                     course.getId(),
                     module.getId()
             )) {
+
                 completedModules++;
             }
         }

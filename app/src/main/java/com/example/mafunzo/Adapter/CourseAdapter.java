@@ -20,9 +20,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CourseAdapter
-        extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
+        extends RecyclerView.Adapter<
+        CourseAdapter.CourseViewHolder> {
 
     private final Context context;
+
     private final List<Course> originalCourses;
     private final List<Course> filteredCourses;
 
@@ -36,13 +38,19 @@ public class CourseAdapter
         this.context = context;
 
         this.originalCourses =
-                new ArrayList<>(courses);
+                new ArrayList<>(
+                        courses
+                );
 
         this.filteredCourses =
-                new ArrayList<>(courses);
+                new ArrayList<>(
+                        courses
+                );
 
         this.progressManager =
-                new ProgressManager(context);
+                new ProgressManager(
+                        context
+                );
     }
 
     @NonNull
@@ -60,7 +68,9 @@ public class CourseAdapter
                                 false
                         );
 
-        return new CourseViewHolder(view);
+        return new CourseViewHolder(
+                view
+        );
     }
 
     @Override
@@ -70,7 +80,9 @@ public class CourseAdapter
     ) {
 
         Course course =
-                filteredCourses.get(position);
+                filteredCourses.get(
+                        position
+                );
 
         int progress =
                 progressManager
@@ -90,6 +102,16 @@ public class CourseAdapter
                 course.getDescription()
         );
 
+        holder.tvDuration.setText(
+                course.getFormattedDuration(
+                        context
+                )
+        );
+
+        holder.tvPrice.setText(
+                course.getFormattedPrice()
+        );
+
         holder.progressBar.setProgress(
                 progress
         );
@@ -98,29 +120,36 @@ public class CourseAdapter
                 progress + "%"
         );
 
-        holder.itemView.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(
+                v -> {
 
-            Intent intent =
-                    new Intent(
-                            context,
-                            CourseDetailActivity.class
+                    Intent intent =
+                            new Intent(
+                                    context,
+                                    CourseDetailActivity.class
+                            );
+
+                    intent.putExtra(
+                            "course",
+                            course
                     );
 
-            intent.putExtra(
-                    "course",
-                    course
-            );
-
-            context.startActivity(intent);
-        });
+                    context.startActivity(
+                            intent
+                    );
+                }
+        );
     }
 
     @Override
     public int getItemCount() {
+
         return filteredCourses.size();
     }
 
-    public void filter(String query) {
+    public void filter(
+            String query
+    ) {
 
         filteredCourses.clear();
 
@@ -134,10 +163,11 @@ public class CourseAdapter
         } else {
 
             String search =
-                    query.toLowerCase().trim();
+                    query.toLowerCase()
+                            .trim();
 
-            for (Course course
-                    : originalCourses) {
+            for (Course course :
+                    originalCourses) {
 
                 if (
                         course.getTitle()
@@ -153,7 +183,9 @@ public class CourseAdapter
                                         .contains(search)
                 ) {
 
-                    filteredCourses.add(course);
+                    filteredCourses.add(
+                            course
+                    );
                 }
             }
         }
@@ -162,6 +194,7 @@ public class CourseAdapter
     }
 
     public void refreshProgress() {
+
         notifyDataSetChanged();
     }
 
@@ -171,6 +204,8 @@ public class CourseAdapter
         TextView tvTitle;
         TextView tvCategory;
         TextView tvDescription;
+        TextView tvDuration;
+        TextView tvPrice;
         TextView tvProgress;
 
         ProgressBar progressBar;
@@ -194,6 +229,16 @@ public class CourseAdapter
             tvDescription =
                     itemView.findViewById(
                             R.id.tv_course_description
+                    );
+
+            tvDuration =
+                    itemView.findViewById(
+                            R.id.tv_course_duration
+                    );
+
+            tvPrice =
+                    itemView.findViewById(
+                            R.id.tv_course_price
                     );
 
             tvProgress =

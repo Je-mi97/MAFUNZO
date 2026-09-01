@@ -299,7 +299,7 @@ public class ModuleDetailActivity extends AppCompatActivity {
                 );
 
         intent.putExtra(
-                "video_name",
+                "video_resource",
                 module.getResource()
         );
 
