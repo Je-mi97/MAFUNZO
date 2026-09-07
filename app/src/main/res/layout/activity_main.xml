@@ -5,74 +5,102 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_main"
     android:padding="24dp"
     tools:context=".Activity.MainActivity">
 
-    <!-- Logo circulaire "L" -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/logo_card"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="64dp"
-        app:cardBackgroundColor="?attr/colorPrimary"
-        app:cardCornerRadius="40dp"
-        app:cardElevation="0dp"
+    <!-- Icône de l'application circulaire avec bordure dorée -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="40dp"
+        android:padding="4dp"
+        android:src="@mipmap/ic_launcher"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:strokeWidth="0dp">
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.MAFUNZO.Circle"
+        app:strokeColor="#C5A358"
+        app:strokeWidth="2dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/logo_letter"
-            android:textColor="?attr/colorOnPrimary"
-            android:textSize="40sp"
-            android:textStyle="bold" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <!-- Nom de l'application -->
+    <!-- Titre "Yekola na Mafunzo" -->
     <TextView
-        android:id="@+id/tv_app_name"
+        android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+        android:layout_marginTop="20dp"
+        android:text="“Yekola na Mafunzo”"
+        android:textColor="@color/white"
+        android:textSize="32sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo_card" />
+        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
 
-    <!-- Question centrale -->
+    <!-- Nuage de salutations (retour au Flow pour un rendu naturel) -->
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow_greetings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:constraint_referenced_ids="tag1,tag2,tag3,tag4,tag5,tag6,tag7,tag8,tag9,tag10,tag11,tag12,tag13,tag14,tag15"
+        app:flow_horizontalGap="8dp"
+        app:flow_horizontalStyle="packed"
+        app:flow_verticalGap="10dp"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_title" />
+
+    <TextView android:id="@+id/tag1" style="@style/GreetingTag" android:text="MBOTE" />
+    <TextView android:id="@+id/tag2" style="@style/GreetingTag" android:text="BOYEI BOLAMU" />
+    <TextView android:id="@+id/tag3" style="@style/GreetingTag" android:text="MATONDO" />
+    <TextView android:id="@+id/tag4" style="@style/GreetingTag" android:text="YAMBI" />
+    <TextView android:id="@+id/tag5" style="@style/GreetingTag" android:text="KIAMBOTE" />
+    <TextView android:id="@+id/tag6" style="@style/GreetingTag" android:text="MOYO" />
+    <TextView android:id="@+id/tag7" style="@style/GreetingTag" android:text="BETUABU" />
+    <TextView android:id="@+id/tag8" style="@style/GreetingTag" android:text="KARIBU" />
+    <TextView android:id="@+id/tag9" style="@style/GreetingTag" android:text="JAMBO" />
+    <TextView android:id="@+id/tag10" style="@style/GreetingTag" android:text="HABARI" />
+    <TextView android:id="@+id/tag11" style="@style/GreetingTag" android:text="ASANTE" />
+    <TextView android:id="@+id/tag12" style="@style/GreetingTag" android:text="BIENVENUE" />
+    <TextView android:id="@+id/tag13" style="@style/GreetingTag" android:text="BONJOUR" />
+    <TextView android:id="@+id/tag14" style="@style/GreetingTag" android:text="WELCOME" />
+    <TextView android:id="@+id/tag15" style="@style/GreetingTag" android:text="HELLO" />
+
+    <!-- Question centrale conservée -->
+
+    <!-- Boutons conservés -->
+
     <TextView
         android:id="@+id/tv_question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="124dp"
         android:gravity="center"
         android:text="@string/welcome_question"
-        android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-        app:layout_constraintBottom_toTopOf="@+id/btn_yes"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_app_name"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintTop_toBottomOf="@id/flow_greetings" />
 
-    <!-- Bouton OUI (Action principale) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_yes"
         style="@style/Widget.Material3.Button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="80dp"
+        android:backgroundTint="@color/green_dark"
         android:text="@string/btn_yes"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btn_no" />
 
-    <!-- Bouton NON (Action secondaire) -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_no"
         style="@style/Widget.Material3.Button.OutlinedButton"
@@ -80,12 +108,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="@string/btn_no"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/btn_yes"
         app:layout_constraintEnd_toStartOf="@+id/btn_yes"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_yes" />
+        app:layout_constraintTop_toTopOf="@+id/btn_yes"
+        app:strokeColor="@color/white" />
 
-    <!-- Sélecteur de langue -->
+    <!-- Sélecteur de langue conservé -->
     <LinearLayout
         android:id="@+id/lang_container"
         android:layout_width="wrap_content"
@@ -100,31 +130,25 @@
             android:id="@+id/tv_lang_en"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
             android:padding="8dp"
             android:text="@string/lang_en"
-            android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+            android:textColor="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:text="@string/lang_separator"
-            android:textAppearance="@style/TextAppearance.Material3.LabelLarge" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/tv_lang_fr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
             android:padding="8dp"
             android:text="@string/lang_fr"
-            android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
-            android:textColor="?attr/colorPrimary" />
+            android:textColor="@color/white"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

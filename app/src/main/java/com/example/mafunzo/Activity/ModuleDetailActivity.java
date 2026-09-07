@@ -8,9 +8,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mafunzo.Model.Module;
 import com.example.mafunzo.R;
@@ -20,427 +24,149 @@ import com.google.android.material.button.MaterialButton;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Locale;
 
 public class ModuleDetailActivity extends AppCompatActivity {
 
-    private Module module;
     private String courseId;
-
-    private TextView tvTitle;
-    private TextView tvDescription;
-    private TextView tvType;
-
-    private MaterialButton btnOpen;
-    private MaterialButton btnComplete;
-
+    private Module module;
     private ProgressManager progressManager;
 
+    private TextView tvTitle, tvType, tvDescription, tvToolbarTitle;
+    private MaterialButton btnAction, btnComplete;
+
     @Override
-    protected void onCreate(
-            @Nullable Bundle savedInstanceState
-    ) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_module_detail);
 
-        setContentView(
-                R.layout.activity_module_detail
-        );
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.module_detail_root), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
-        progressManager =
-                new ProgressManager(this);
-
-        ImageButton btnBack =
-                findViewById(
-                        R.id.btn_back_module
-                );
-
-        tvTitle =
-                findViewById(
-                        R.id.tv_module_detail_title
-                );
-
-        tvDescription =
-                findViewById(
-                        R.id.tv_module_detail_description
-                );
-
-        tvType =
-                findViewById(
-                        R.id.tv_module_detail_type
-                );
-
-        btnOpen =
-                findViewById(
-                        R.id.btn_open_module
-                );
-
-        btnComplete =
-                findViewById(
-                        R.id.btn_complete_module
-                );
-
-        btnBack.setOnClickListener(
-                v -> finish()
-        );
-
-        module =
-                (Module) getIntent()
-                        .getSerializableExtra(
-                                "module"
-                        );
-
-        courseId =
-                getIntent()
-                        .getStringExtra(
-                                "course_id"
-                        );
+        progressManager = new ProgressManager(this);
+        courseId = getIntent().getStringExtra("course_id");
+        module = (Module) getIntent().getSerializableExtra("module");
 
         if (module == null || courseId == null) {
-
-            Toast.makeText(
-                    this,
-                    "Module invalide.",
-                    Toast.LENGTH_LONG
-            ).show();
-
             finish();
             return;
         }
 
+        tvToolbarTitle = findViewById(R.id.tv_module_toolbar_title);
+        tvTitle = findViewById(R.id.tv_module_title);
+        tvType = findViewById(R.id.tv_module_type);
+        tvDescription = findViewById(R.id.tv_module_description);
+        btnAction = findViewById(R.id.btn_action_module);
+        btnComplete = findViewById(R.id.btn_complete_module);
+
+        ImageButton btnBack = findViewById(R.id.btn_back_module);
+        btnBack.setOnClickListener(v -> finish());
+
         displayModule();
 
-        btnOpen.setOnClickListener(
-                v -> openModule()
-        );
-
-        btnComplete.setOnClickListener(
-                v -> markPdfAsCompleted()
-        );
+        btnAction.setOnClickListener(v -> openModuleContent());
+        btnComplete.setOnClickListener(v -> markAsCompleted());
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         if (module != null && courseId != null) {
+            boolean completed = progressManager.isModuleCompleted(courseId, module.getId());
+            module.setCompleted(completed);
             displayModule();
         }
     }
 
     private void displayModule() {
+        tvToolbarTitle.setText(module.getTitle());
+        tvTitle.setText(module.getTitle());
+        tvType.setText("Type : " + module.getContentType());
+        tvDescription.setText(module.getDescription());
 
-        tvTitle.setText(
-                module.getTitle()
-        );
-
-        tvDescription.setText(
-                module.getDescription()
-        );
-
-        String type =
-                getModuleType();
-
-        tvType.setText(
-                "Type : " + type
-        );
-
-        boolean completed =
-                progressManager.isModuleCompleted(
-                        courseId,
-                        module.getId()
-                );
-
-        module.setCompleted(
-                completed
-        );
-
-        updateOpenButton(type);
-
-        /*
-         * PDF :
-         * l'utilisateur doit cliquer sur
-         * "Marquer comme terminé".
-         *
-         * VIDEO :
-         * le module est terminé automatiquement
-         * à la fin de la vidéo.
-         *
-         * QUIZ :
-         * le module est terminé automatiquement
-         * si le score est >= 60 %.
-         */
-        if (Module.TYPE_PDF.equals(type)) {
-
-            btnComplete.setVisibility(
-                    View.VISIBLE
-            );
-
-            if (completed) {
-
-                btnComplete.setText(
-                        "✓ Module terminé"
-                );
-
-                btnComplete.setEnabled(false);
-
-            } else {
-
-                btnComplete.setText(
-                        "Marquer comme terminé"
-                );
-
-                btnComplete.setEnabled(true);
-            }
-
+        if (module.isCompleted()) {
+            btnComplete.setText("✓ Terminé");
+            btnComplete.setEnabled(false);
         } else {
-
-            btnComplete.setVisibility(
-                    View.GONE
-            );
-        }
-    }
-
-    private String getModuleType() {
-
-        if (module.getContentType() == null) {
-            return "";
+            btnComplete.setText("Marquer comme terminé");
+            btnComplete.setEnabled(true);
         }
 
-        return module.getContentType()
-                .trim()
-                .toUpperCase(Locale.ROOT);
-    }
-
-    private void updateOpenButton(
-            String type
-    ) {
-
-        switch (type) {
-
-            case Module.TYPE_PDF:
-
-                btnOpen.setText(
-                        "Lire le PDF"
-                );
-
-                break;
-
+        // Configuration du bouton d'action selon le type
+        switch (module.getContentType()) {
             case Module.TYPE_VIDEO:
-
-                btnOpen.setText(
-                        "Regarder la vidéo"
-                );
-
+                btnAction.setText("Regarder la vidéo");
+                btnComplete.setVisibility(View.GONE); // Auto-terminé à la fin de la vidéo
                 break;
-
             case Module.TYPE_QUIZ:
-
-                btnOpen.setText(
-                        "Commencer le quiz"
-                );
-
+                btnAction.setText("Commencer le quiz");
+                btnComplete.setVisibility(View.GONE); // Auto-terminé si score >= 60%
                 break;
-
-            default:
-
-                btnOpen.setText(
-                        "Ouvrir le contenu"
-                );
-
-                break;
-        }
-    }
-
-    private void openModule() {
-
-        String type =
-                getModuleType();
-
-        switch (type) {
-
             case Module.TYPE_PDF:
-
-                openPdfFromAssets(
-                        module.getResource()
-                );
-
+                btnAction.setText("Lire le PDF");
+                btnComplete.setVisibility(View.VISIBLE);
                 break;
-
-            case Module.TYPE_VIDEO:
-
-                openVideo();
-
-                break;
-
-            case Module.TYPE_QUIZ:
-
-                openQuiz();
-
-                break;
-
             default:
-
-                Toast.makeText(
-                        this,
-                        "Type de contenu non pris en charge.",
-                        Toast.LENGTH_LONG
-                ).show();
-
+                btnAction.setText("Ouvrir le contenu");
+                btnComplete.setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    private void openVideo() {
-
-        Intent intent =
-                new Intent(
-                        this,
-                        VideoActivity.class
-                );
-
-        intent.putExtra(
-                "video_resource",
-                module.getResource()
-        );
-
-        intent.putExtra(
-                "course_id",
-                courseId
-        );
-
-        intent.putExtra(
-                "module_id",
-                module.getId()
-        );
-
-        startActivity(intent);
+    private void openModuleContent() {
+        String type = module.getContentType();
+        if (Module.TYPE_VIDEO.equals(type)) {
+            Intent intent = new Intent(this, VideoActivity.class);
+            intent.putExtra("video_resource", module.getResource());
+            intent.putExtra("course_id", courseId);
+            intent.putExtra("module_id", module.getId());
+            startActivity(intent);
+        } else if (Module.TYPE_QUIZ.equals(type)) {
+            Intent intent = new Intent(this, QuizActivity.class);
+            intent.putExtra("course_id", courseId);
+            intent.putExtra("module_id", module.getId());
+            startActivity(intent);
+        } else if (Module.TYPE_PDF.equals(type)) {
+            openPdfFromAssets(module.getResource());
+        } else {
+            Toast.makeText(this, "Contenu : " + module.getResource(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void openQuiz() {
-
-        Intent intent =
-                new Intent(
-                        this,
-                        QuizActivity.class
-                );
-
-        intent.putExtra(
-                "course_id",
-                courseId
-        );
-
-        intent.putExtra(
-                "module_id",
-                module.getId()
-        );
-
-        startActivity(intent);
-    }
-
-    private void markPdfAsCompleted() {
-
-        progressManager.markModuleCompleted(
-                courseId,
-                module.getId()
-        );
-
-        module.setCompleted(true);
-
-        btnComplete.setText(
-                "✓ Module terminé"
-        );
-
-        btnComplete.setEnabled(false);
-
-        Toast.makeText(
-                this,
-                "Module terminé !",
-                Toast.LENGTH_SHORT
-        ).show();
-    }
-
-    private void openPdfFromAssets(
-            String fileName
-    ) {
-
+    private void openPdfFromAssets(String fileName) {
         try {
-
-            File pdfFile =
-                    new File(
-                            getCacheDir(),
-                            fileName
-                    );
-
+            File pdfFile = new File(getCacheDir(), fileName);
             if (!pdfFile.exists()) {
-
-                InputStream inputStream =
-                        getAssets().open(
-                                "courses/" + fileName
-                        );
-
-                FileOutputStream outputStream =
-                        new FileOutputStream(
-                                pdfFile
-                        );
-
-                byte[] buffer =
-                        new byte[4096];
-
+                InputStream is = getAssets().open("courses/" + fileName);
+                FileOutputStream os = new FileOutputStream(pdfFile);
+                byte[] buffer = new byte[4096];
                 int length;
-
-                while (
-                        (length =
-                                inputStream.read(
-                                        buffer
-                                )) > 0
-                ) {
-
-                    outputStream.write(
-                            buffer,
-                            0,
-                            length
-                    );
+                while ((length = is.read(buffer)) > 0) {
+                    os.write(buffer, 0, length);
                 }
-
-                outputStream.close();
-                inputStream.close();
+                os.close();
+                is.close();
             }
 
-            Uri pdfUri =
-                    FileProvider.getUriForFile(
-                            this,
-                            getPackageName()
-                                    + ".fileprovider",
-                            pdfFile
-                    );
-
-            Intent intent =
-                    new Intent(
-                            Intent.ACTION_VIEW
-                    );
-
-            intent.setDataAndType(
-                    pdfUri,
-                    "application/pdf"
-            );
-
-            intent.addFlags(
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-            );
-
-            intent.addFlags(
-                    Intent.FLAG_ACTIVITY_NO_HISTORY
-            );
-
+            Uri pdfUri = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", pdfFile);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(pdfUri, "application/pdf");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(intent);
-
         } catch (Exception e) {
+            Toast.makeText(this, "Erreur lors de l'ouverture du PDF.", Toast.LENGTH_LONG).show();
+        }
+    }
 
-            Toast.makeText(
-                    this,
-                    "Impossible d'ouvrir le PDF.",
-                    Toast.LENGTH_LONG
-            ).show();
+    private void markAsCompleted() {
+        if (courseId != null) {
+            progressManager.markModuleCompleted(courseId, module.getId());
+            module.setCompleted(true);
+            displayModule();
+            Toast.makeText(this, "Module validé !", Toast.LENGTH_SHORT).show();
         }
     }
 }

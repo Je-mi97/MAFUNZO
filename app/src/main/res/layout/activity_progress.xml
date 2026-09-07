@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/progress_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="@color/background"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -40,7 +41,6 @@
             android:textSize="15sp" />
 
         <!-- JAVA -->
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,11 +83,9 @@
                     android:textStyle="bold" />
 
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
 
         <!-- HTML / CSS -->
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,13 +126,10 @@
                     android:text="0%"
                     android:textColor="@color/green_primary"
                     android:textStyle="bold" />
-
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
 
         <!-- MARKETING -->
-
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -176,11 +171,7 @@
                     android:text="0%"
                     android:textColor="@color/green_primary"
                     android:textStyle="bold" />
-
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
-
     </LinearLayout>
-
 </ScrollView>

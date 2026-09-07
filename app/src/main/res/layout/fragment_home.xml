@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Header Premium (Ton design original) -->
+    <!-- Header Premium -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
@@ -52,7 +52,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:strokeColor="?attr/colorOutlineVariant"
                 app:strokeWidth="1dp">
-
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -68,20 +67,17 @@
                 app:cardCornerRadius="26dp"
                 app:cardElevation="0dp"
                 app:layout_constraintTop_toBottomOf="@id/tv_home_subtitle">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingHorizontal="16dp">
-
                     <ImageView
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:src="@drawable/ic_search"
                         app:tint="?attr/colorOnSurfaceVariant" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -90,7 +86,6 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -127,7 +122,6 @@
                     android:textColor="?attr/colorPrimary"
                     android:textStyle="bold" />
             </RelativeLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_subjects"
                 android:layout_width="match_parent"
@@ -137,7 +131,7 @@
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_subject" />
 
-            <!-- Section: Recommandations (3x2) -->
+            <!-- Section: Recommandations (Grille 3x2) -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,8 +143,15 @@
                     android:text="@string/section_recommendations"
                     android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                     android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/btn_see_all_recommendations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/link_see_all"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold" />
             </RelativeLayout>
-
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_recommendations"
                 android:layout_width="match_parent"
@@ -161,6 +162,68 @@
                 app:spanCount="3"
                 tools:itemCount="6"
                 tools:listitem="@layout/item_course_card" />
+
+            <!-- Section: Carrières -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:paddingHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_careers"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/btn_see_all_careers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/link_see_all"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_careers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="4"
+                tools:listitem="@layout/item_career" />
+
+            <!-- Section: Certifications -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:paddingHorizontal="16dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_certifications"
+                    android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/btn_see_all_certifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/link_see_all"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_certifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingHorizontal="16dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:itemCount="3"
+                tools:listitem="@layout/item_certification" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

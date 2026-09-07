@@ -28,30 +28,16 @@ public class WauActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
 
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_wau);
 
-        ViewCompat.setOnApplyWindowInsetsListener(
-                findViewById(android.R.id.content),
-                (v, insets) -> {
-
-                    Insets systemBars =
-                            insets.getInsets(
-                                    WindowInsetsCompat.Type.systemBars()
-                            );
-
-                    v.setPadding(
-                            systemBars.left,
-                            systemBars.top,
-                            systemBars.right,
-                            systemBars.bottom
-                    );
-
-                    return insets;
-                }
-        );
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.wau_root), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         // Champs
         tilFirstName = findViewById(R.id.til_first_name);

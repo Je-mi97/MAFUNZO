@@ -12,192 +12,51 @@ public class CourseRepository {
     }
 
     public static List<Course> getCourses() {
+        List<Course> courses = new ArrayList<>();
 
-        List<Course> courses =
-                new ArrayList<>();
-
-        // JAVA — GRATUIT
-
-        Course java =
-                new Course(
-                        "C001",
-                        "Java pour débutants",
-                        "Informatique",
-                        "Apprenez les bases de Java et de la programmation.",
-                        "MAFUNZO Academy",
-                        0
-                );
-
-        java.addModule(
-                new Module(
-                        "M001",
-                        "Introduction à Java",
-                        "Découvrez Java et son fonctionnement.",
-                        Module.TYPE_PDF,
-                        "introduction_java.pdf",
-                        25
-                )
-        );
-
-        java.addModule(
-                new Module(
-                        "M002",
-                        "Variables et types",
-                        "Apprenez à déclarer et utiliser les variables.",
-                        Module.TYPE_PDF,
-                        "variables_java.pdf",
-                        30
-                )
-        );
-
-        java.addModule(
-                new Module(
-                        "M003",
-                        "Conditions",
-                        "Apprenez à utiliser if, else et switch.",
-                        Module.TYPE_VIDEO,
-                        "https://www.youtube.com/watch?v=_vjgGTwWmso",
-                        10
-                )
-        );
-
-        java.addModule(
-                new Module(
-                        "M004",
-                        "Quiz Java",
-                        "Vérifiez vos connaissances sur les bases de Java.",
-                        Module.TYPE_QUIZ,
-                        "quiz_java",
-                        3
-                )
-        );
-
-        // HTML & CSS — PAYANT
-
-        Course web =
-                new Course(
-                        "C002",
-                        "HTML & CSS",
-                        "Développement Web",
-                        "Apprenez à créer et mettre en forme des pages Web.",
-                        "MAFUNZO Academy",
-                        10000
-                );
-
-        web.addModule(
-                new Module(
-                        "M005",
-                        "Introduction au Web",
-                        "Découvrez le fonctionnement du Web.",
-                        Module.TYPE_PDF,
-                        "introduction_web.pdf",
-                        20
-                )
-        );
-
-        web.addModule(
-                new Module(
-                        "M006",
-                        "HTML",
-                        "Apprenez à structurer une page Web avec HTML.",
-                        Module.TYPE_VIDEO,
-                        "https://www.youtube.com/watch?v=8FqZZrbnwkM",
-                        30
-                )
-        );
-
-        web.addModule(
-                new Module(
-                        "M007",
-                        "CSS",
-                        "Apprenez à mettre en forme une page Web avec CSS.",
-                        Module.TYPE_VIDEO,
-                        "https://www.youtube.com/watch?v=HN4-7k0zC-Y",
-                        30
-                )
-        );
-
-        web.addModule(
-                new Module(
-                        "M010",
-                        "Quiz HTML & CSS",
-                        "Vérifiez vos connaissances.",
-                        Module.TYPE_QUIZ,
-                        "quiz_html_css",
-                        3
-                )
-        );
-
-        // MARKETING DIGITAL — PAYANT
-
-        Course marketing =
-                new Course(
-                        "C003",
-                        "Marketing digital",
-                        "Marketing",
-                        "Découvrez les fondamentaux du marketing numérique.",
-                        "MAFUNZO Academy",
-                        8000
-                );
-
-        marketing.addModule(
-                new Module(
-                        "M008",
-                        "Introduction au marketing",
-                        "Découvrez les bases du marketing digital.",
-                        Module.TYPE_PDF,
-                        "marketing_intro.pdf",
-                        25
-                )
-        );
-
-        marketing.addModule(
-                new Module(
-                        "M009",
-                        "Réseaux sociaux",
-                        "Découvrez le marketing sur les réseaux sociaux.",
-                        Module.TYPE_VIDEO,
-                        "https://www.bpifrance-universite.fr/formation/marketing-digital-reprenez-les-bases-utilisez-les-reseaux-sociaux-a-bon-escient/",
-                        13
-                )
-        );
-
-        marketing.addModule(
-                new Module(
-                        "M011",
-                        "Quiz Marketing",
-                        "Vérifiez vos connaissances.",
-                        Module.TYPE_QUIZ,
-                        "quiz_marketing",
-                        3
-                )
-        );
-
-        // AJOUT DES FORMATIONS
-
+        // 1. JAVA — GRATUIT (Restauré avec Quizz et Vidéo)
+        Course java = new Course("C001", "Java pour débutants", "Informatique", "Apprenez les bases de Java et de la programmation.", "MAFUNZO Academy", 0);
+        java.addModule(new Module("M001", "Introduction à Java", "Découvrez Java et son fonctionnement.", Module.TYPE_PDF, "introduction_java.pdf", 25));
+        java.addModule(new Module("M002", "Variables et types", "Apprenez à déclarer et utiliser les variables.", Module.TYPE_PDF, "variables_java.pdf", 30));
+        java.addModule(new Module("M003", "Conditions", "Apprenez à utiliser if, else et switch.", Module.TYPE_VIDEO, "https://www.youtube.com/watch?v=_vjgGTwWmso", 10));
+        java.addModule(new Module("M004", "Quiz Java", "Vérifiez vos connaissances sur les bases de Java.", Module.TYPE_QUIZ, "quiz_java", 5));
         courses.add(java);
+
+        // 2. HTML & CSS — 10.000 FC (Restauré avec Vidéos et Quizz)
+        Course web = new Course("C002", "HTML & CSS", "Développement Web", "Apprenez à créer et mettre en forme des pages Web.", "MAFUNZO Academy", 10000);
+        web.addModule(new Module("M005", "Introduction au Web", "Découvrez le fonctionnement du Web.", Module.TYPE_PDF, "introduction_web.pdf", 20));
+        web.addModule(new Module("M006", "HTML", "Apprenez à structurer une page Web avec HTML.", Module.TYPE_VIDEO, "https://www.youtube.com/watch?v=8FqZZrbnwkM", 30));
+        web.addModule(new Module("M007", "CSS", "Apprenez à mettre en forme une page Web avec CSS.", Module.TYPE_VIDEO, "https://www.youtube.com/watch?v=HN4-7k0zC-Y", 30));
+        web.addModule(new Module("M010", "Quiz HTML & CSS", "Vérifiez vos connaissances.", Module.TYPE_QUIZ, "quiz_html_css", 5));
         courses.add(web);
+
+        // 3. MARKETING — 8.000 FC (Restauré avec Vidéo et Quizz)
+        Course marketing = new Course("C003", "Marketing digital", "Marketing", "Découvrez les fondamentaux du marketing numérique.", "MAFUNZO Academy", 8000);
+        marketing.addModule(new Module("M008", "Introduction au marketing", "Découvrez les bases du marketing digital.", Module.TYPE_PDF, "marketing_intro.pdf", 25));
+        marketing.addModule(new Module("M009", "Réseaux sociaux", "Découvrez le marketing sur les réseaux sociaux.", Module.TYPE_VIDEO, "https://www.bpifrance-universite.fr/formation/marketing-digital-reprenez-les-bases-utilisez-les-reseaux-sociaux-a-bon-escient/", 15));
+        marketing.addModule(new Module("M011", "Quiz Marketing", "Vérifiez vos connaissances.", Module.TYPE_QUIZ, "quiz_marketing", 5));
         courses.add(marketing);
+
+        // 4. DESIGN — 12.000 FC
+        Course design = new Course("C004", "UI/UX Design", "Design", "Interfaces professionnelles.", "UI Expert", 12000);
+        design.addModule(new Module("M04", "Figma", "Introduction à Figma.", Module.TYPE_PDF, "figma_intro.pdf", 25));
+        courses.add(design);
+
+        // 5. DATA SCIENCE — 15.000 FC
+        Course data = new Course("C005", "Data Science", "Data", "Analyse de données pro.", "Data Analyst", 15000);
+        data.addModule(new Module("M05", "Python", "Bases de Python pour la Data.", Module.TYPE_PDF, "data_intro.pdf", 30));
+        courses.add(data);
+
+        // 6. ANDROID — 20.000 FC
+        Course android = new Course("C006", "Android Natif", "Mobile", "Création d'applications mobiles.", "Dev Android", 20000);
+        android.addModule(new Module("M06", "Kotlin", "Introduction au Kotlin.", Module.TYPE_PDF, "android_intro.pdf", 35));
+        courses.add(android);
 
         return courses;
     }
 
-
-    public static Course getCourseById(
-            String courseId
-    ) {
-
-        for (Course course :
-                getCourses()) {
-
-            if (course.getId()
-                    .equals(courseId)) {
-
-                return course;
-            }
-        }
-
+    public static Course getCourseById(String id) {
+        for (Course c : getCourses()) if (c.getId().equals(id)) return c;
         return null;
     }
-
 }

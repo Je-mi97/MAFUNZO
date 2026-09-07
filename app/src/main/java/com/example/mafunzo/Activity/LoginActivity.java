@@ -6,7 +6,11 @@ import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.mafunzo.Model.AuthResponse;
 import com.example.mafunzo.Model.LoginRequest;
@@ -35,9 +39,16 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.login_main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
 
         sessionManager = new SessionManager(this);
         userPreferences = new UserPreferences(this);
@@ -156,10 +167,6 @@ public class LoginActivity extends AppCompatActivity {
                                 return;
                             }
 
-                            /*
-                             * Sauvegarde des informations
-                             * retournées par le backend.
-                             */
                             userPreferences.setFirstName(
                                     user.getFirstName()
                             );
@@ -172,21 +179,6 @@ public class LoginActivity extends AppCompatActivity {
                                     user.getEmail()
                             );
 
-                            /*
-                             * Sauvegarde du téléphone
-                             * si nécessaire dans UserPreferences.
-                             */
-                            if (user.getPhone() != null) {
-                                // Le téléphone sera disponible
-                                // côté backend même s'il n'est
-                                // pas encore utilisé dans le profil.
-                            }
-
-                            /*
-                             * Sauvegarde du token JWT.
-                             * Pour l'instant, SessionManager
-                             * gère l'état de connexion.
-                             */
                             sessionManager.createSession();
 
                             Toast.makeText(

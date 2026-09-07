@@ -21,12 +21,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Activation du mode Edge-to-Edge pour une immersion totale
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        // Correction du chevauchement avec la barre d'état (heure, batterie)
+        // On applique les marges système dynamiquement au conteneur principal
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            // On ajoute les systemBars aux paddings existants (24dp convertis ici en pixels)
+            int density = (int) getResources().getDisplayMetrics().density;
+            int padding = 24 * density;
+            
+            v.setPadding(
+                systemBars.left + padding,
+                systemBars.top + padding,
+                systemBars.right + padding,
+                systemBars.bottom + padding
+            );
             return insets;
         });
 
@@ -45,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // 4. Logique de Changement de Langue
         tvLangEn.setOnClickListener(v -> {
             setAppLocale("en");
             Toast.makeText(this, "Language set to English", Toast.LENGTH_SHORT).show();

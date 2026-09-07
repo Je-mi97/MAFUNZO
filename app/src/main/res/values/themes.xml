@@ -1,45 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
 
-    <style
-        name="Base.Theme.MAFUNZO"
-        parent="Theme.Material3.Light.NoActionBar">
-
+    <style name="Base.Theme.MAFUNZO" parent="Theme.Material3.Light.NoActionBar">
         <item name="colorPrimary">@color/green_primary</item>
         <item name="colorOnPrimary">@color/white</item>
-
         <item name="colorPrimaryContainer">@color/green_light</item>
         <item name="colorOnPrimaryContainer">@color/green_dark</item>
-
         <item name="colorSecondary">@color/green_medium</item>
         <item name="colorOnSecondary">@color/white</item>
-
         <item name="colorSurface">@color/surface</item>
         <item name="colorOnSurface">@color/text_primary</item>
-
         <item name="android:colorAccent">@color/green_primary</item>
-
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:statusBarColor">@color/background</item>
-
         <item name="android:navigationBarColor">@color/background</item>
         <item name="android:windowLightNavigationBar">true</item>
-
-        <item name="android:fontFamily">sans</item>
-
+        <item name="android:fontFamily">sans-serif</item>
     </style>
 
-    <style
-        name="Theme.MAFUNZO"
-        parent="Base.Theme.MAFUNZO" />
+    <style name="Theme.MAFUNZO" parent="Base.Theme.MAFUNZO" />
 
-    <style
-        name="Widget.MAFUNZO.BottomNavigationView.ActiveIndicator"
-        parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-
+    <style name="Widget.MAFUNZO.BottomNavigationView.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/green_light</item>
+    </style>
 
+    <!-- Style pour l'image circulaire -->
+    <style name="ShapeAppearance.MAFUNZO.Circle" parent="">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Style pour les tags de salutations -->
+    <style name="GreetingTag">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/bg_greeting_tag</item>
+        <item name="android:paddingHorizontal">14dp</item>
+        <item name="android:paddingVertical">8dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>
